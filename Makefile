@@ -12,9 +12,11 @@ fmt: ## Format source code
 
 .PHONY: lint
 lint: ## Run golint and go vet against the codebase
+	@command -v goimports 2>&1 >/dev/null || go get -u golang.org/x/tools/cmd/goimports
 	@command -v golint 2>&1 >/dev/null || go get -u github.com/golang/lint/golint
 	golint -set_exit_status .
 	go vet ./...
+	goimports -d $(FILES)
 
 .PHONY: test
 test: ## Run the tests against the codebase
@@ -46,10 +48,6 @@ deps: ## Fetch all dependencies
 	@command -v dep 2>&1 >/dev/null || go get -u github.com/golang/dep/cmd/dep
 	@dep ensure -v
 
-.PHONY: imports
-imports: ## Fixes the syntax (linting) of the codebase
-	goimports -d $(FILES)
-
 .PHONY: clean
 clean: ## Remove binary if it exists
 	rm -f $(NAME)
@@ -68,7 +66,7 @@ dev-env: ## Build a local development environment using Docker
 		/bin/bash -c 'make deps; make install; bash'
 
 .PHONY: all
-all: lint imports test coverage build ## Test, builds and ship package for all supported platforms
+all: deps lint test coverage build ## Test, builds and ship package for all supported platforms
 
 .PHONY: help
 help: ## Displays this help
