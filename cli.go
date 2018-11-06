@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/urfave/cli"
 
 	"github.com/mvisonneau/go-ebsnvme/pkg/ebsnvme"
