@@ -7,8 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Manage dependencies using gomodules
+- Upgraded to go 1.13
+
 ## [0.1.0] - 2018-11-06
-### FEATURES
+
+### Added
+
 - Working state of the app and lib
 - got some tests in place
 - Makefile
