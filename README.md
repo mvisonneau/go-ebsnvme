@@ -63,8 +63,24 @@ For the following ones, you need to know which version you want to install, to f
 
 ### Library
 
-```bash
-go import github.com/mvisonneau/go-ebsnvme/pkg
+```go
+package main
+
+import (
+   "fmt"
+   "os"
+
+   "github.com/mvisonneau/go-ebsnvme/pkg/ebsnvme"
+)
+
+func main() {
+   device, err := ebsnvme.ScanDevice("/dev/nvme0n1")
+   if err != nil {
+      fmt.Println(err)
+      os.Exit(1)
+   }
+   fmt.Println(device)
+}
 ```
 
 ### Client
