@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Manage dependencies using gomodules
 - Upgraded to go 1.13
+- Migrated CI to Drone
+- Automated release of binaries, docker, DEB and RPM packages
 
 ## [0.1.0] - 2018-11-06
 

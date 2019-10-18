@@ -1,22 +1,28 @@
 NAME          := go-ebsnvme
 VERSION       := $(shell git describe --tags --abbrev=1)
 FILES         := $(shell git ls-files '*.go')
-LDFLAGS       := -w -extldflags "-static" -X 'main.version=$(VERSION)'
-REGISTRY      := mvisonneau/$(NAME)
+REPOSITORY    := mvisonneau/$(NAME)
 .DEFAULT_GOAL := help
 
+export GO111MODULE=on
+
+.PHONY: setup
+setup: ## Install required libraries/tools for build tasks
+	@command -v goveralls 2>&1 >/dev/null || GO111MODULE=off go get -u -v github.com/mattn/goveralls
+	@command -v golint 2>&1 >/dev/null    || GO111MODULE=off go get -u -v golang.org/x/lint/golint
+	@command -v cover 2>&1 >/dev/null     || GO111MODULE=off go get -u -v golang.org/x/tools/cmd/cover
+	@command -v goimports 2>&1 >/dev/null || GO111MODULE=off go get -u -v golang.org/x/tools/cmd/goimports
+
 .PHONY: fmt
-fmt: ## Format source code
-	@command -v goimports 2>&1 >/dev/null || go get -u golang.org/x/tools/cmd/goimports
+fmt: setup ## Format source code
 	goimports -w $(FILES)
 
 .PHONY: lint
-lint: ## Run golint and go vet against the codebase
-	@command -v goimports 2>&1 >/dev/null || go get -u golang.org/x/tools/cmd/goimports
-	@command -v golint 2>&1 >/dev/null || go get -u github.com/golang/lint/golint
+lint: setup ## Run golint, goimports and go vet against the codebase
 	golint -set_exit_status .
 	go vet ./...
-	goimports -d $(FILES)
+	goimports -d $(FILES) > goimports.out
+	@if [ -s goimports.out ]; then cat goimports.out; rm goimports.out; exit 1; else rm goimports.out; fi
 
 .PHONY: test
 test: ## Run the tests against the codebase
@@ -27,26 +33,16 @@ install: ## Build and install locally the binary (dev purpose)
 	go install .
 
 .PHONY: build
-build: ## Build the binary
-	@command -v gox 2>&1 >/dev/null || go get -u github.com/mitchellh/gox
-	mkdir -p dist; rm -rf dist/*
-	CGO_ENABLED=0 gox -osarch "linux/386 linux/amd64" -ldflags "$(LDFLAGS)" -output dist/$(NAME)_{{.OS}}_{{.Arch}}
-	strip dist/*_linux_*
+build: setup ## Build the binaries
+	goreleaser release --snapshot --skip-publish --rm-dist
 
-.PHONY: build-docker
-build-docker:
-	CGO_ENABLED=0 go build -ldflags "$(LDFLAGS)" .
-	strip $(NAME)
+.PHONY: release
+release: setup ## Build & release the binaries
+	goreleaser release --rm-dist
 
-.PHONY: publish-github
-publish-github: ## Send the binaries onto the GitHub release
-	@command -v ghr 2>&1 >/dev/null || go get -u github.com/tcnksm/ghr
-	ghr -u mvisonneau -replace $(VERSION) dist
-
-.PHONY: deps
-deps: ## Fetch all dependencies
-	@command -v dep 2>&1 >/dev/null || go get -u github.com/golang/dep/cmd/dep
-	@dep ensure -v
+.PHONY: publish-coveralls
+publish-coveralls: setup ## Publish coverage results on coveralls
+	goveralls -service drone.io -coverprofile=coverage.out
 
 .PHONY: clean
 clean: ## Remove binary if it exists
@@ -55,7 +51,7 @@ clean: ## Remove binary if it exists
 .PHONY: coverage
 coverage: ## Generates coverage report
 	rm -rf *.out
-	go test -coverprofile=coverage.out
+	go test -v ./... -coverpkg=./... -coverprofile=coverage.out
 
 .PHONY: dev-env
 dev-env: ## Build a local development environment using Docker
@@ -65,8 +61,16 @@ dev-env: ## Build a local development environment using Docker
 		golang:1.13 \
 		/bin/bash -c 'make deps; make install; bash'
 
+.PHONY: is-git-dirty
+is-git-dirty: ## Tests if git is in a dirty state
+	@test $(shell git status --porcelain | grep -c .) -eq 0
+
+.PHONY: sign-drone
+sign-drone: ## Sign Drone CI configuration
+	drone sign $(REPOSITORY) --save
+
 .PHONY: all
-all: deps lint test coverage build ## Test, builds and ship package for all supported platforms
+all: lint test build coverage ## Test, builds and ship package for all supported platforms
 
 .PHONY: help
 help: ## Displays this help
