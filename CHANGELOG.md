@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.1.1] - 2019-10-18
+
 ### Changed
 
 - Manage dependencies using gomodules
@@ -24,5 +26,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - LICENSE
 - README
 
-[Unreleased]: https://github.com/mvisonneau/go-ebsnvme/compare/0.1.0...HEAD
+[Unreleased]: https://github.com/mvisonneau/go-ebsnvme/compare/0.1.1...HEAD
+[0.1.1]: https://github.com/mvisonneau/go-ebsnvme/tree/0.1.1
 [0.1.0]: https://github.com/mvisonneau/go-ebsnvme/tree/0.1.0
