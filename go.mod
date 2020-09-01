@@ -1,5 +1,8 @@
 module github.com/mvisonneau/go-ebsnvme
 
-go 1.13
+go 1.14
 
-require github.com/urfave/cli v1.22.4
+require (
+	github.com/stretchr/testify v1.6.1
+	github.com/urfave/cli v1.22.4
+)

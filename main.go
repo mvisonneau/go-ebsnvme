@@ -1,9 +1,11 @@
 package main
 
 import (
-	"os"
+	"github.com/mvisonneau/go-ebsnvme/cli"
 )
 
+var version = ""
+
 func main() {
-	runCli().Run(os.Args)
+	cli.Run(version)
 }

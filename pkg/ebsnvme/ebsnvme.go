@@ -14,6 +14,7 @@ const (
 	awsNvmeEbsMn              = "Amazon Elastic Block Store"
 )
 
+// Device represents a block device
 type Device struct {
 	VolumeID string
 	Name     string
@@ -78,6 +79,7 @@ type nvmeAdminCommand struct {
 	reserved1 uint64
 }
 
+// ScanDevice returns a Device object based on its path
 func ScanDevice(device string) (d Device, e error) {
 	f, err := open(device)
 	if err != nil {
@@ -99,7 +101,7 @@ func ScanDevice(device string) (d Device, e error) {
 		return
 	}
 
-	if idCtrl.getVendorId() != awsNvmeVolumeID {
+	if idCtrl.getVendorID() != awsNvmeVolumeID {
 		e = fmt.Errorf("Volume ID not matching an AWS EBS one")
 		return
 	}
@@ -146,7 +148,7 @@ func (i *nvmeIdentifyController) getDeviceName() string {
 	return s
 }
 
-func (i *nvmeIdentifyController) getVendorId() uint16 {
+func (i *nvmeIdentifyController) getVendorID() uint16 {
 	return i.vid
 }
 

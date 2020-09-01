@@ -1,29 +1,33 @@
-package main
+package cli
 
 import (
 	"fmt"
-
-	"github.com/urfave/cli"
+	"os"
+	"time"
 
 	"github.com/mvisonneau/go-ebsnvme/pkg/ebsnvme"
+	"github.com/urfave/cli"
 )
-
-var version = "<devel>"
 
 const (
 	usage = "go-ebsnvme <block_device> [--volume-id|--device-name]"
 )
 
-// runCli : Generates cli configuration for the application
-func runCli() (c *cli.App) {
-	c = cli.NewApp()
-	c.Name = "go-ebsnvme"
-	c.Version = version
-	c.Usage = "Fetch information about AWS EBS NVMe volumes"
-	c.UsageText = usage
-	c.EnableBashCompletion = true
+// Run handles the instanciation of the CLI application
+func Run(version string) {
+	NewApp(version, time.Now()).Run(os.Args)
+}
 
-	c.Flags = []cli.Flag{
+// NewApp configures the CLI application
+func NewApp(version string, start time.Time) (app *cli.App) {
+	app = cli.NewApp()
+	app.Name = "go-ebsnvme"
+	app.Version = version
+	app.Usage = "Fetch information about AWS EBS NVMe volumes"
+	app.UsageText = usage
+	app.EnableBashCompletion = true
+
+	app.Flags = []cli.Flag{
 		cli.BoolFlag{
 			Name:  "volume-id, i",
 			Usage: "only print the EBS volume-id",
@@ -34,7 +38,7 @@ func runCli() (c *cli.App) {
 		},
 	}
 
-	c.Action = func(ctx *cli.Context) error {
+	app.Action = func(ctx *cli.Context) error {
 		if len(ctx.Args()) != 1 ||
 			(ctx.Bool("volume-id") && ctx.Bool("device-name")) {
 			return cli.NewExitError("Usage: "+usage, 1)
@@ -59,6 +63,10 @@ func runCli() (c *cli.App) {
 		fmt.Println(d.VolumeID)
 		fmt.Println(d.Name)
 		return nil
+	}
+
+	app.Metadata = map[string]interface{}{
+		"startTime": start,
 	}
 
 	return

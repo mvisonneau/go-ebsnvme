@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Bumped to go 1.14
+- Bumped to gorelease 0.142.0
+- Fixed automated docker image builds
+- Enhanced test and lint checks
+- Refactored Makefile
+
 ## [0.1.1] - 2019-10-18
 
 ### Changed
