@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+- Bumped to go 1.15
+- Bumped to gorelease 0.145.0
+- Refactored codebase to follow golang standard structure
+
 ## [0.1.2] - 2020-09-01
 
 ### Changed

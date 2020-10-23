@@ -3,7 +3,8 @@ before:
     - go mod download
 
 builds:
-  - env:
+  - main: ./cmd/go-ebsnvme
+    env:
       - CGO_ENABLED=0
     goos:
       - linux
@@ -11,26 +12,25 @@ builds:
       - 386
       - amd64
       - arm64
+    flags:
+      - -trimpath
 
 nfpms:
-  - maintainer: &author
-      Maxime VISONNEAU <maxime.visonneau@gmail.com>
-    description:
-      Fetch information about AWS EBS NVMe volumes
-    license:
-      Apache 2.0
-    homepage: &homepage
-      https://github.com/mvisonneau/go-ebsnvme
+  - maintainer: &author Maxime VISONNEAU <maxime.visonneau@gmail.com>
+    description: Fetch information about AWS EBS NVMe volumes
+    license: Apache 2.0
+    homepage: &homepage https://github.com/mvisonneau/go-ebsnvme
     vendor: *author
     formats:
       - deb
       - rpm
 
 checksum:
-  name_template: checksums.txt
+  name_template: '{{ .ProjectName }}_{{ .Version }}_SHA256SUMS'
+  algorithm: sha256
 
 snapshot:
-  name_template: "{{ .Tag }}-{{ .ShortCommit }}"
+  name_template: '{{ .Tag }}-{{ .ShortCommit }}'
 
 changelog:
   skip: true
