@@ -7,12 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.1.3] - 2020-09-01
+
 ### Added
 
-- Added gosec tests
+- Added gosec tests, excluding unsafe package warnings (G103)
 
 ### Changed
 
+- Fixed a bug preventing device ids to be rendered correctly
 - Bumped to go 1.15
 - Bumped to gorelease 0.145.0
 - Refactored codebase to follow golang standard structure
@@ -46,6 +49,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - LICENSE
 - README
 
-[Unreleased]: https://github.com/mvisonneau/go-ebsnvme/compare/0.1.1...HEAD
+[Unreleased]: https://github.com/mvisonneau/go-ebsnvme/compare/0.1.3...HEAD
+[0.1.3]: https://github.com/mvisonneau/go-ebsnvme/tree/0.1.3
+[0.1.2]: https://github.com/mvisonneau/go-ebsnvme/tree/0.1.2
 [0.1.1]: https://github.com/mvisonneau/go-ebsnvme/tree/0.1.1
 [0.1.0]: https://github.com/mvisonneau/go-ebsnvme/tree/0.1.0

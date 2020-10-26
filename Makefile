@@ -46,7 +46,7 @@ misspell: setup ## Test code with misspell
 
 .PHONY: gosec
 gosec: setup ## Test code for security vulnerabilities
-	gosec ./...
+	gosec --exclude G103 ./... 
 
 .PHONY: test
 test: ## Run the tests against the codebase
