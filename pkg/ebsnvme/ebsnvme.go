@@ -134,7 +134,7 @@ func ioctl(fd, cmd, ptr uintptr) error {
 
 func (i *nvmeIdentifyController) getVolumeID() string {
 	s := strings.TrimSpace(string(i.sn[:]))
-	if s[:3] != "vol-" {
+	if s[3:4] != "-" {
 		return "vol-" + s[3:]
 	}
 	return s

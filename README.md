@@ -3,7 +3,7 @@
 [![GoDoc](https://godoc.org/github.com/mvisonneau/go-ebsnvme?status.svg)](https://godoc.org/github.com/mvisonneau/go-ebsnvme/app)
 [![Go Report Card](https://goreportcard.com/badge/github.com/mvisonneau/go-ebsnvme)](https://goreportcard.com/report/github.com/mvisonneau/go-ebsnvme)
 [![Build Status](https://cloud.drone.io/api/badges/mvisonneau/go-ebsnvme/status.svg)](https://cloud.drone.io/mvisonneau/go-ebsnvme)
-[![Coverage Status](https://coveralls.io/repos/github/mvisonneau/go-ebsnvme/badge.svg?branch=master)](https://coveralls.io/github/mvisonneau/go-ebsnvme?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/mvisonneau/go-ebsnvme/badge.svg?branch=main)](https://coveralls.io/github/mvisonneau/go-ebsnvme?branch=main)
 
 `go-ebsnvme` is a [golang](https://golang.org/) version of the [AWS ebsnvme-id python script](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/nvme-ebs-volumes.html)
 
