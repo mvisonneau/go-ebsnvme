@@ -28,7 +28,8 @@ Have a look onto the [latest release page](https://github.com/mvisonneau/go-ebsn
 ### Go
 
 ```bash
-~$ go get -u github.com/mvisonneau/go-ebsnvme
+~$ go run github.com/mvisonneau/go-ebsnvme/cmd/go-ebsnvme@latest
+
 ```
 
 ### Docker

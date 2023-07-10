@@ -1,25 +1,8 @@
-##
-# BUILD CONTAINER
-##
-
-FROM goreleaser/goreleaser:v0.145.0 as builder
-
-WORKDIR /build
-
-COPY . .
-RUN \
-apk add --no-cache make ca-certificates ;\
-make build-linux-amd64
-
-##
-# RELEASE CONTAINER
-##
-
-FROM scratch
+FROM busybox:1.36-glibc
 
 WORKDIR /
 
-COPY --from=builder /build/dist/go-ebsnvme_linux_amd64/go-ebsnvme /usr/local/bin/
+COPY go-ebsvnme /usr/local/bin/
 
-ENTRYPOINT ["/usr/local/bin/go-ebsnvme"]
+ENTRYPOINT ["/usr/local/bin/go-ebsvnme"]
 CMD [""]
