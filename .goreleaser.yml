@@ -16,8 +16,7 @@ builds:
       - -trimpath
 
 archives:
-  - name_template: '{{ .ProjectName }}_{{ .Tag }}_{{ .Os }}_{{ .Arch }}{{ end }}'
-    rlcp: true
+  - name_template: '{{ .ProjectName }}_{{ .Tag }}_{{ .Os }}_{{ .Arch }}'
     files:
       - README.md
       - LICENSE
@@ -29,7 +28,7 @@ nfpms:
     license: &license Apache-2.0
     homepage: &homepage https://github.com/mvisonneau/go-ebsnvme
     vendor: *author
-    file_name_template: '{{ .ProjectName }}_{{ .Tag }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    file_name_template: '{{ .ProjectName }}_{{ .Tag }}_{{ .Os }}_{{ .Arch }}'
     bindir: /usr/local/bin
     formats:
       - apk

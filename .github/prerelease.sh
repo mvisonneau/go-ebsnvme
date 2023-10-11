@@ -25,7 +25,7 @@ trap cleanup EXIT
 git tag -d edge
 git tag -f ${PRERELEASE_TAG}
 goreleaser release \
-    --rm-dist \
+    --clean \
     --skip-validate \
     -f .goreleaser.pre.yml
 

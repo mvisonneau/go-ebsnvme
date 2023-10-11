@@ -17,7 +17,7 @@ builds:
       - -trimpath
 
 archives:
-  - name_template: '{{ .ProjectName }}_edge_{{ .Os }}_{{ .Arch }}{{ end }}'
+  - name_template: '{{ .ProjectName }}_edge_{{ .Os }}_{{ .Arch }}'
     rlcp: true
     files:
       - README.md
@@ -30,7 +30,7 @@ nfpms:
     license: Apache-2.0
     homepage: https://github.com/mvisonneau/go-ebsnvme
     vendor: *author
-    file_name_template: '{{ .ProjectName }}_edge_{{ .Os }}_{{ .Arch }}{{ end }}'
+    file_name_template: '{{ .ProjectName }}_edge_{{ .Os }}_{{ .Arch }}'
     bindir: /usr/local/bin
     formats:
       - apk
