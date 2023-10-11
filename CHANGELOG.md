@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Bumped to go 1.20
-- Fixed CI
+- Migrated CI from Drone to GH actions
 
 ## [0.1.3] - 2020-09-01
 
