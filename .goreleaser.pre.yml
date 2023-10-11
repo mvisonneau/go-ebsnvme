@@ -28,7 +28,7 @@ nfpms:
   - maintainer: &author Maxime VISONNEAU <maxime.visonneau@gmail.com>
     description: Fetch information about AWS EBS NVMe volumes
     license: Apache-2.0
-    homepage: https://github.com/mvisonneau/go-ebsvnme
+    homepage: https://github.com/mvisonneau/go-ebsnvme
     vendor: *author
     file_name_template: '{{ .ProjectName }}_edge_{{ .Os }}_{{ .Arch }}{{ end }}'
     bindir: /usr/local/bin
@@ -59,56 +59,56 @@ release:
 
 dockers:
   - image_templates:
-      - 'docker.io/mvisonneau/go-ebsvnme:latest-amd64'
-      - 'ghcr.io/mvisonneau/go-ebsvnme:latest-amd64'
-      - 'quay.io/mvisonneau/go-ebsvnme:latest-amd64'
-    ids: [go-ebsvnme]
+      - 'docker.io/mvisonneau/go-ebsnvme:latest-amd64'
+      - 'ghcr.io/mvisonneau/go-ebsnvme:latest-amd64'
+      - 'quay.io/mvisonneau/go-ebsnvme:latest-amd64'
+    ids: [go-ebsnvme]
     goarch: amd64
     use: buildx
     build_flag_templates:
       - --platform=linux/amd64
       - --label=org.opencontainers.image.title={{ .ProjectName }}
       - --label=org.opencontainers.image.description={{ .ProjectName }}
-      - --label=org.opencontainers.image.url=https://github.com/mvisonneau/go-ebsvnme
-      - --label=org.opencontainers.image.source=https://github.com/mvisonneau/go-ebsvnme
+      - --label=org.opencontainers.image.url=https://github.com/mvisonneau/go-ebsnvme
+      - --label=org.opencontainers.image.source=https://github.com/mvisonneau/go-ebsnvme
       - --label=org.opencontainers.image.version={{ .Version }}
       - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
       - --label=org.opencontainers.image.revision={{ .FullCommit }}
       - --label=org.opencontainers.image.licenses=Apache-2.0
 
   - image_templates:
-      - 'docker.io/mvisonneau/go-ebsvnme:latest-arm64'
-      - 'ghcr.io/mvisonneau/go-ebsvnme:latest-arm64'
-      - 'quay.io/mvisonneau/go-ebsvnme:latest-arm64'
-    ids: [go-ebsvnme]
+      - 'docker.io/mvisonneau/go-ebsnvme:latest-arm64'
+      - 'ghcr.io/mvisonneau/go-ebsnvme:latest-arm64'
+      - 'quay.io/mvisonneau/go-ebsnvme:latest-arm64'
+    ids: [go-ebsnvme]
     goarch: arm64
     use: buildx
     build_flag_templates:
       - --platform=linux/arm64
       - --label=org.opencontainers.image.title={{ .ProjectName }}
       - --label=org.opencontainers.image.description={{ .ProjectName }}
-      - --label=org.opencontainers.image.url=https://github.com/mvisonneau/go-ebsvnme
-      - --label=org.opencontainers.image.source=https://github.com/mvisonneau/go-ebsvnme
+      - --label=org.opencontainers.image.url=https://github.com/mvisonneau/go-ebsnvme
+      - --label=org.opencontainers.image.source=https://github.com/mvisonneau/go-ebsnvme
       - --label=org.opencontainers.image.version={{ .Version }}
       - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
       - --label=org.opencontainers.image.revision={{ .FullCommit }}
       - --label=org.opencontainers.image.licenses=Apache-2.0
 
 docker_manifests:
-  - name_template: docker.io/mvisonneau/go-ebsvnme:latest
+  - name_template: docker.io/mvisonneau/go-ebsnvme:latest
     image_templates:
-      - docker.io/mvisonneau/go-ebsvnme:latest-amd64
-      - docker.io/mvisonneau/go-ebsvnme:latest-arm64
+      - docker.io/mvisonneau/go-ebsnvme:latest-amd64
+      - docker.io/mvisonneau/go-ebsnvme:latest-arm64
 
-  - name_template: ghcr.io/mvisonneau/go-ebsvnme:latest
+  - name_template: ghcr.io/mvisonneau/go-ebsnvme:latest
     image_templates:
-      - ghcr.io/mvisonneau/go-ebsvnme:latest-amd64
-      - ghcr.io/mvisonneau/go-ebsvnme:latest-arm64
+      - ghcr.io/mvisonneau/go-ebsnvme:latest-amd64
+      - ghcr.io/mvisonneau/go-ebsnvme:latest-arm64
 
-  - name_template: quay.io/mvisonneau/go-ebsvnme:latest
+  - name_template: quay.io/mvisonneau/go-ebsnvme:latest
     image_templates:
-      - quay.io/mvisonneau/go-ebsvnme:latest-amd64
-      - quay.io/mvisonneau/go-ebsvnme:latest-arm64
+      - quay.io/mvisonneau/go-ebsnvme:latest-amd64
+      - quay.io/mvisonneau/go-ebsnvme:latest-arm64
 
 signs:
   - artifacts: checksum

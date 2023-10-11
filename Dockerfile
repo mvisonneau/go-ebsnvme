@@ -2,7 +2,7 @@ FROM busybox:1.36-glibc
 
 WORKDIR /
 
-COPY go-ebsvnme /usr/local/bin/
+COPY go-ebsnvme /usr/local/bin/
 
-ENTRYPOINT ["/usr/local/bin/go-ebsvnme"]
+ENTRYPOINT ["/usr/local/bin/go-ebsnvme"]
 CMD [""]
