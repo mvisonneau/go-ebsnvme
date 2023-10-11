@@ -1,106 +1,74 @@
 NAME          := go-ebsnvme
-VERSION       := $(shell git describe --tags --abbrev=1)
 FILES         := $(shell git ls-files */*.go)
+COVERAGE_FILE := coverage.out
 REPOSITORY    := mvisonneau/$(NAME)
 .DEFAULT_GOAL := help
 
-export GO111MODULE=on
-
-.PHONY: setup
-setup: ## Install required libraries/tools for build tasks
-	@command -v cover 2>&1 >/dev/null       || GO111MODULE=off go get -u -v golang.org/x/tools/cmd/cover
-	@command -v goimports 2>&1 >/dev/null   || GO111MODULE=off go get -u -v golang.org/x/tools/cmd/goimports
-	@command -v gosec 2>&1 >/dev/null       || GO111MODULE=off go get -u -v github.com/securego/gosec/cmd/gosec
-	@command -v goveralls 2>&1 >/dev/null   || GO111MODULE=off go get -u -v github.com/mattn/goveralls
-	@command -v ineffassign 2>&1 >/dev/null || GO111MODULE=off go get -u -v github.com/gordonklaus/ineffassign
-	@command -v misspell 2>&1 >/dev/null    || GO111MODULE=off go get -u -v github.com/client9/misspell/cmd/misspell
-	@command -v revive 2>&1 >/dev/null      || GO111MODULE=off go get -u -v github.com/mgechev/revive
-
 .PHONY: fmt
-fmt: setup ## Format source code
-	goimports -w $(FILES)
+fmt: ## Format source code
+	go run mvdan.cc/gofumpt@v0.5.0 -w $(shell git ls-files **/*.go)
+	go run github.com/daixiang0/gci@v0.10.1 write -s standard -s default -s "prefix(github.com/mvisonneau)" .
 
 .PHONY: lint
-lint: revive vet goimports ineffassign misspell gosec ## Run all lint related tests against the codebase
-
-.PHONY: revive
-revive: setup ## Test code syntax with revive
-	revive -config .revive.toml $(FILES)
-
-.PHONY: vet
-vet: ## Test code syntax with go vet
-	go vet ./...
-
-.PHONY: goimports
-goimports: setup ## Test code syntax with goimports
-	goimports -d $(FILES) > goimports.out
-	@if [ -s goimports.out ]; then cat goimports.out; rm goimports.out; exit 1; else rm goimports.out; fi
-
-.PHONY: ineffassign
-ineffassign: setup ## Test code syntax for ineffassign
-	ineffassign $(FILES)
-
-.PHONY: misspell
-misspell: setup ## Test code with misspell
-	misspell -error $(FILES)
-
-.PHONY: gosec
-gosec: setup ## Test code for security vulnerabilities
-	gosec --exclude G103 ./... 
+lint: ## Run all lint related tests upon the codebase
+	go run github.com/golangci/golangci-lint/cmd/golangci-lint@v1.52.2 run -v --fast
 
 .PHONY: test
 test: ## Run the tests against the codebase
-	go test -v -race ./...
+	@rm -rf $(COVERAGE_FILE)
+	go test -v -count=1 -race ./... -coverprofile=$(COVERAGE_FILE)
+	@go tool cover -func $(COVERAGE_FILE) | awk '/^total/ {print "coverage: " $$3}'
+
+.PHONY: coverage
+coverage: ## Prints coverage report
+	go tool cover -func $(COVERAGE_FILE)
 
 .PHONY: install
 install: ## Build and install locally the binary (dev purpose)
 	go install ./cmd/$(NAME)
 
-.PHONY: build-local
-build-local: ## Build the binaries using local GOOS
+.PHONY: build
+build: ## Build the binaries using local GOOS
 	go build ./cmd/$(NAME)
 
-.PHONY: build
-build: ## Build the binaries
-	goreleaser release --snapshot --skip-publish --rm-dist
-
-.PHONY: build-linux-amd64
-build-linux-amd64: ## Build the binaries
-	goreleaser release --snapshot --skip-publish --rm-dist -f .goreleaser.linux-amd64.yml
-
 .PHONY: release
-release: ## Build & release the binaries
-	goreleaser release --rm-dist
+release: ## Build & release the binaries (stable)
+	git tag -d edge
+	goreleaser release --clean
 
-.PHONY: publish-coveralls
-publish-coveralls: setup ## Publish coverage results on coveralls
-	goveralls -service drone.io -coverprofile=coverage.out
+.PHONY: prerelease
+prerelease: ## Build & prerelease the binaries (edge)
+	@\
+		REPOSITORY=$(REPOSITORY) \
+		NAME=$(NAME) \
+		GITHUB_TOKEN=$(GITHUB_TOKEN) \
+		.github/prerelease.sh
 
 .PHONY: clean
 clean: ## Remove binary if it exists
 	rm -f $(NAME)
 
-.PHONY: coverage
-coverage: ## Generates coverage report
-	rm -rf *.out
-	go test -v ./... -coverpkg=./... -coverprofile=coverage.out
-
-.PHONY: dev-env
-dev-env: ## Build a local development environment using Docker
-	@docker run -it --rm \
-		-v $(shell pwd):/go/src/github.com/mvisonneau/$(NAME) \
-		-w /go/src/github.com/mvisonneau/$(NAME) \
-		-p 8080:8080 \
-		golang:1.15 \
-		/bin/bash -c 'make setup; make install; bash'
+.PHONY: coverage-html
+coverage-html: ## Generates coverage report and displays it in the browser
+	go tool cover -html=coverage.out
 
 .PHONY: is-git-dirty
 is-git-dirty: ## Tests if git is in a dirty state
+	@git status --porcelain
 	@test $(shell git status --porcelain | grep -c .) -eq 0
 
-.PHONY: sign-drone
-sign-drone: ## Sign Drone CI configuration
-	drone sign $(REPOSITORY) --save
+.PHONY: man-pages
+man-pages: ## Generates man pages
+	rm -rf helpers/manpages
+	mkdir -p helpers/manpages
+	go run ./cmd/tools/man | gzip -c -9 >helpers/manpages/$(NAME).1.gz
+
+.PHONY: autocomplete-scripts
+autocomplete-scripts: ## Download CLI autocompletion scripts
+	rm -rf helpers/autocomplete
+	mkdir -p helpers/autocomplete
+	curl -sL https://raw.githubusercontent.com/urfave/cli/v2.5.0/autocomplete/bash_autocomplete > helpers/autocomplete/bash
+	curl -sL https://raw.githubusercontent.com/urfave/cli/v2.5.0/autocomplete/zsh_autocomplete > helpers/autocomplete/zsh
 
 .PHONY: all
 all: lint test build coverage ## Test, builds and ship package for all supported platforms

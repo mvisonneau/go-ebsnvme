@@ -1,0 +1,130 @@
+before:
+  hooks:
+    - make man-pages
+    - make autocomplete-scripts
+
+builds:
+  - main: ./cmd/go-ebsnvme
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - 386
+      - amd64
+      - arm64
+    flags:
+      - -trimpath
+
+archives:
+  - name_template: '{{ .ProjectName }}_edge_{{ .Os }}_{{ .Arch }}{{ end }}'
+    rlcp: true
+    files:
+      - README.md
+      - LICENSE
+      - helpers/*
+
+nfpms:
+  - maintainer: &author Maxime VISONNEAU <maxime.visonneau@gmail.com>
+    description: Fetch information about AWS EBS NVMe volumes
+    license: Apache-2.0
+    homepage: https://github.com/mvisonneau/go-ebsvnme
+    vendor: *author
+    file_name_template: '{{ .ProjectName }}_edge_{{ .Os }}_{{ .Arch }}{{ end }}'
+    bindir: /usr/local/bin
+    formats:
+      - apk
+      - deb
+      - rpm
+    contents:
+      - src: ./helpers/autocomplete/bash
+        dst: /usr/share/bash-completion/completions/{{ .ProjectName }}
+        file_info:
+          mode: 0644
+      - src: ./helpers/autocomplete/zsh
+        dst:  /usr/share/zsh/vendor-completions/_{{ .ProjectName }}
+        file_info:
+          mode: 0644
+      - src: ./helpers/manpages/{{ .ProjectName }}.1.gz
+        dst: /usr/share/man/man1/{{ .ProjectName }}.1.gz
+        file_info:
+          mode: 0644
+      - src: ./LICENSE
+        dst: /usr/share/doc/{{ .ProjectName }}/copyright
+        file_info:
+          mode: 0644
+
+release:
+  disable: true
+
+dockers:
+  - image_templates:
+      - 'docker.io/mvisonneau/go-ebsvnme:latest-amd64'
+      - 'ghcr.io/mvisonneau/go-ebsvnme:latest-amd64'
+      - 'quay.io/mvisonneau/go-ebsvnme:latest-amd64'
+    ids: [go-ebsvnme]
+    goarch: amd64
+    use: buildx
+    build_flag_templates:
+      - --platform=linux/amd64
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.url=https://github.com/mvisonneau/go-ebsvnme
+      - --label=org.opencontainers.image.source=https://github.com/mvisonneau/go-ebsvnme
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=Apache-2.0
+
+  - image_templates:
+      - 'docker.io/mvisonneau/go-ebsvnme:latest-arm64'
+      - 'ghcr.io/mvisonneau/go-ebsvnme:latest-arm64'
+      - 'quay.io/mvisonneau/go-ebsvnme:latest-arm64'
+    ids: [go-ebsvnme]
+    goarch: arm64
+    use: buildx
+    build_flag_templates:
+      - --platform=linux/arm64
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.url=https://github.com/mvisonneau/go-ebsvnme
+      - --label=org.opencontainers.image.source=https://github.com/mvisonneau/go-ebsvnme
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=Apache-2.0
+
+docker_manifests:
+  - name_template: docker.io/mvisonneau/go-ebsvnme:latest
+    image_templates:
+      - docker.io/mvisonneau/go-ebsvnme:latest-amd64
+      - docker.io/mvisonneau/go-ebsvnme:latest-arm64
+
+  - name_template: ghcr.io/mvisonneau/go-ebsvnme:latest
+    image_templates:
+      - ghcr.io/mvisonneau/go-ebsvnme:latest-amd64
+      - ghcr.io/mvisonneau/go-ebsvnme:latest-arm64
+
+  - name_template: quay.io/mvisonneau/go-ebsvnme:latest
+    image_templates:
+      - quay.io/mvisonneau/go-ebsvnme:latest-amd64
+      - quay.io/mvisonneau/go-ebsvnme:latest-arm64
+
+signs:
+  - artifacts: checksum
+    args:
+      [
+        '-u',
+        'C09CA9F71C5C988E65E3E5FCADEA38EDC46F25BE',
+        '--output',
+        '${signature}',
+        '--detach-sign',
+        '${artifact}',
+      ]
+
+checksum:
+  name_template: '{{ .ProjectName }}_edge_sha512sums.txt'
+  algorithm: sha512
+
+changelog:
+  skip: true

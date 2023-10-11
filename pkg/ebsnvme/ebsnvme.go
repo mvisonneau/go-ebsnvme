@@ -14,7 +14,7 @@ const (
 	awsNvmeEbsMn              = "Amazon Elastic Block Store"
 )
 
-// Device represents a block device
+// Device represents a block device.
 type Device struct {
 	VolumeID string
 	Name     string
@@ -79,7 +79,7 @@ type nvmeAdminCommand struct {
 	reserved1 uint64
 }
 
-// ScanDevice returns a Device object based on its path
+// ScanDevice returns a Device object based on its path.
 func ScanDevice(device string) (d Device, e error) {
 	f, err := open(device)
 	if err != nil {
@@ -102,34 +102,36 @@ func ScanDevice(device string) (d Device, e error) {
 	}
 
 	if idCtrl.getVendorID() != awsNvmeVolumeID {
-		e = fmt.Errorf("Volume ID not matching an AWS EBS one")
+		e = fmt.Errorf("volume ID not matching an AWS EBS one")
 		return
 	}
 
 	if idCtrl.getModuleNumber() != awsNvmeEbsMn {
-		e = fmt.Errorf("Module number not matching an AWS EBS one")
+		e = fmt.Errorf("module number not matching an AWS EBS one")
 		return
 	}
 
 	d.VolumeID = idCtrl.getVolumeID()
 	d.Name = idCtrl.getDeviceName()
+
 	return
 }
 
 func open(device string) (uintptr, error) {
-	f, err := syscall.Open(device, syscall.O_RDWR, 0660)
+	f, err := syscall.Open(device, syscall.O_RDWR, 0o660)
 	if err != nil {
 		return 0, err
 	}
+
 	return uintptr(f), nil
 }
 
-func ioctl(fd, cmd, ptr uintptr) error {
-	_, _, errno := syscall.Syscall(syscall.SYS_IOCTL, fd, cmd, ptr)
-	if errno != syscall.Errno(0x0) {
-		return errno
+func ioctl(fd, cmd, ptr uintptr) (err error) {
+	if _, _, errno := syscall.Syscall(syscall.SYS_IOCTL, fd, cmd, ptr); errno != syscall.Errno(0x0) {
+		err = errno
 	}
-	return nil
+
+	return
 }
 
 func (i *nvmeIdentifyController) getVolumeID() string {
@@ -137,6 +139,7 @@ func (i *nvmeIdentifyController) getVolumeID() string {
 	if s[3:4] != "-" {
 		return "vol-" + s[3:]
 	}
+
 	return s
 }
 
@@ -145,6 +148,7 @@ func (i *nvmeIdentifyController) getDeviceName() string {
 	if len(s) < 5 || s[:5] != "/dev/" {
 		return "/dev/" + s
 	}
+
 	return s
 }
 

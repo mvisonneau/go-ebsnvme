@@ -1,0 +1,44 @@
+linters:
+  enable-all: true
+  disable:
+    # Deprecated ones
+    - golint
+    - ifshort
+    - interfacer
+    - maligned
+    - nosnakecase
+    - scopelint
+
+    # We don't want these ones
+    - exhaustivestruct
+    - forcetypeassert
+    - gochecknoglobals
+    - godox
+    - goerr113
+    - ireturn
+    - nlreturn
+    - nakedret
+    - testpackage
+    - varnamelen
+    - interfacebloat
+    - gomnd
+
+linters-settings:
+  funlen:
+    lines: -1 # (disabled)
+    statements: 100
+
+  cyclop:
+    max-complexity: 20
+
+  lll:
+    line-length: 140
+
+  nestif:
+    min-complexity: 18
+
+  gci:
+    sections:
+      - standard
+      - default
+      - prefix(github.com/mvisonneau)
