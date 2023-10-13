@@ -1,4 +1,4 @@
-# mvisonneau/go-ebsnvme
+# go-ebsnvme
 
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/mvisonneau/go-ebsnvme)](https://pkg.go.dev/mod/github.com/mvisonneau/go-ebsnvme)
 [![Go Report Card](https://goreportcard.com/badge/github.com/mvisonneau/go-ebsnvme)](https://goreportcard.com/report/github.com/mvisonneau/go-ebsnvme)
