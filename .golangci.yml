@@ -10,18 +10,19 @@ linters:
     - scopelint
 
     # We don't want these ones
+    - depguard
     - exhaustivestruct
     - forcetypeassert
     - gochecknoglobals
     - godox
     - goerr113
+    - gomnd
+    - interfacebloat
     - ireturn
-    - nlreturn
     - nakedret
+    - nlreturn
     - testpackage
     - varnamelen
-    - interfacebloat
-    - gomnd
 
 linters-settings:
   funlen:
