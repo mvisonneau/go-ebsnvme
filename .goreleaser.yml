@@ -57,7 +57,7 @@ brews:
     homepage: *homepage
     license: *license
     folder: Formula
-    tap:
+    repository:
       owner: mvisonneau
       name: homebrew-tap
     test: |
@@ -67,14 +67,6 @@ brews:
       bash_completion.install "./helpers/autocomplete/bash" => "{{ .ProjectName }}"
       zsh_completion.install "./helpers/autocomplete/zsh" => "_{{ .ProjectName }}"
       man1.install "./helpers/manpages/{{ .ProjectName }}.1.gz"
-
-scoops:
-  - description: *description
-    homepage: *homepage
-    license: *license
-    bucket:
-      owner: mvisonneau
-      name: scoops
 
 dockers:
   - image_templates:
