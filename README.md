@@ -12,14 +12,18 @@
 
 ```bash
 ~$ go-ebsnvme /dev/nvme0n1
-vol-99cff4881d00c56a8
+sda1
 /dev/sda1
+vol-99cff4881d00c56a8
 
-~$ go-ebsnvme --volume-id /dev/nvme1n1
+~$ go-ebsnvme -f volume-id /dev/nvme1n1
 vol-80dfffbbee880a72c
 
-~$ go-ebsnvme --device-name /dev/nvme1n1
-/dev/xvdf
+~$ go-ebsnvme -f device-name /dev/nvme1n1
+xvdf
+
+~$ go-ebsnvme -t json -f device-path,volume-id  /dev/nvme1n1
+{"device-path":"/dev/xvdf","volume-id":"vol-80dfffbbee880a72c"}
 ```
 
 ## Install
@@ -81,7 +85,10 @@ func main() {
       fmt.Println(err)
       os.Exit(1)
    }
-   fmt.Println(device)
+   
+   fmt.Println(device.Name)
+   fmt.Println(device.Path)
+   fmt.Println(device.VolumeID)
 }
 ```
 
@@ -90,22 +97,18 @@ func main() {
 ```bash
 ~$ go-ebsnvme -h
 NAME:
-   go-ebsnvme - Fetch information about AWS EBS NVMe volumes
+   go-ebsnvme - Find details about currently attached AWS EBS NVMe volumes
 
 USAGE:
-   go-ebsnvme <block_device> [--volume-id|--device-name]
-
-VERSION:
-   <devel>
+   go-ebsnvme [opts] <block_device>
 
 COMMANDS:
-     help, h  Shows a list of commands or help for one command
+   help, h  Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
-   --volume-id, -i    only print the EBS volume-id
-   --device-name, -n  only print the name of the block device
-   --help, -h         show help
-   --version, -v      print the version
+   --output-type value, -t value                                      print results in whether "text" or "json" (default: "text")
+   --output-field value, -f value [ --output-field value, -f value ]  filter out printed fields (default: "device-name", "device-path", "volume-id")
+   --help, -h                                                         show help
 ```
 
 ## Contribute
