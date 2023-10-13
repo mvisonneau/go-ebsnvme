@@ -23,6 +23,7 @@ linters:
     - nlreturn
     - testpackage
     - varnamelen
+    - wsl
 
 linters-settings:
   funlen:

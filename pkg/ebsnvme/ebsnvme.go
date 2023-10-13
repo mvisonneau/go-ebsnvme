@@ -17,6 +17,7 @@ const (
 // Device represents a block device.
 type Device struct {
 	VolumeID string
+	Path     string
 	Name     string
 }
 
@@ -80,10 +81,9 @@ type nvmeAdminCommand struct {
 }
 
 // ScanDevice returns a Device object based on its path.
-func ScanDevice(device string) (d Device, e error) {
-	f, err := open(device)
-	if err != nil {
-		e = err
+func ScanDevice(device string) (d Device, err error) {
+	var f uintptr
+	if f, err = open(device); err != nil {
 		return
 	}
 
@@ -95,23 +95,22 @@ func ScanDevice(device string) (d Device, e error) {
 		cdw10:  1,
 	}
 
-	err = ioctl(f, nvmeIoctlAdminCmd, uintptr(unsafe.Pointer(&adminCmd)))
-	if err != nil {
-		e = err
+	if err = ioctl(f, nvmeIoctlAdminCmd, uintptr(unsafe.Pointer(&adminCmd))); err != nil {
 		return
 	}
 
 	if idCtrl.getVendorID() != awsNvmeVolumeID {
-		e = fmt.Errorf("volume ID not matching an AWS EBS one")
+		err = fmt.Errorf("volume ID not matching an AWS EBS one")
 		return
 	}
 
 	if idCtrl.getModuleNumber() != awsNvmeEbsMn {
-		e = fmt.Errorf("module number not matching an AWS EBS one")
+		err = fmt.Errorf("module number not matching an AWS EBS one")
 		return
 	}
 
 	d.VolumeID = idCtrl.getVolumeID()
+	d.Path = idCtrl.getDevicePath()
 	d.Name = idCtrl.getDeviceName()
 
 	return
@@ -143,13 +142,17 @@ func (i *nvmeIdentifyController) getVolumeID() string {
 	return s
 }
 
-func (i *nvmeIdentifyController) getDeviceName() string {
+func (i *nvmeIdentifyController) getDevicePath() string {
 	s := strings.TrimSpace(string(i.vs.bdev[:]))
 	if len(s) < 5 || s[:5] != "/dev/" {
 		return "/dev/" + s
 	}
 
 	return s
+}
+
+func (i *nvmeIdentifyController) getDeviceName() string {
+	return strings.TrimPrefix(strings.TrimSpace(string(i.vs.bdev[:])), "/dev/")
 }
 
 func (i *nvmeIdentifyController) getVendorID() uint16 {
