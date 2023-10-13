@@ -7,11 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [0.1.4] - 2023-07-10
+## [0.1.4] - 2023-10-13
 
 ### Changed
 
-- Bumped to go 1.20
+- Bumped to go 1.21
 - Migrated CI from Drone to GH actions
 
 ## [0.1.3] - 2020-09-01
@@ -57,6 +57,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - README
 
 [Unreleased]: https://github.com/mvisonneau/go-ebsnvme/compare/0.1.3...HEAD
+[0.1.4]: https://github.com/mvisonneau/go-ebsnvme/tree/0.1.3
 [0.1.3]: https://github.com/mvisonneau/go-ebsnvme/tree/0.1.3
 [0.1.2]: https://github.com/mvisonneau/go-ebsnvme/tree/0.1.2
 [0.1.1]: https://github.com/mvisonneau/go-ebsnvme/tree/0.1.1
