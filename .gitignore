@@ -1,4 +1,5 @@
 dist
+helpers
 vendor
 coverage.out
 go-ebsnvme

@@ -61,7 +61,7 @@ is-git-dirty: ## Tests if git is in a dirty state
 man-pages: ## Generates man pages
 	rm -rf helpers/manpages
 	mkdir -p helpers/manpages
-	go run ./cmd/tools/man | gzip -c -9 >helpers/manpages/$(NAME).1.gz
+	go run ./scripts/generate_man.go | gzip -c -9 >helpers/manpages/$(NAME).1.gz
 
 .PHONY: autocomplete-scripts
 autocomplete-scripts: ## Download CLI autocompletion scripts
