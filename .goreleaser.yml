@@ -29,7 +29,7 @@ nfpms:
     homepage: &homepage https://github.com/mvisonneau/go-ebsnvme
     vendor: *author
     file_name_template: '{{ .ProjectName }}_{{ .Tag }}_{{ .Os }}_{{ .Arch }}'
-    bindir: /usr/local/bin
+    bindir: /usr/local/sbin
     formats:
       - apk
       - deb

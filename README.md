@@ -54,7 +54,7 @@ For the following ones, you need to know which version you want to install, to f
 ```bash
 # Binary (eg: linux/amd64)
 ~$ wget https://github.com/mvisonneau/go-ebsnvme/releases/download/${VERSION}/go-ebsnvme_${VERSION}_linux_amd64.tar.gz
-~$ tar zxvf go-ebsnvme_${VERSION}_linux_amd64.tar.gz -C /usr/local/bin
+~$ tar zxvf go-ebsnvme_${VERSION}_linux_amd64.tar.gz -C /usr/local/sbin
 
 # DEB package (eg: linux/386)
 ~$ wget https://github.com/mvisonneau/go-ebsnvme/releases/download/${VERSION}/go-ebsnvme_${VERSION}_linux_386.deb

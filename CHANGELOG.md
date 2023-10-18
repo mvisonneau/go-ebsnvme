@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Default installation location from `/usr/local/bin` to `/usr/local/sbin`
+
 ## [v0.2.0] - 2023-10-13
 
 ### Changed
