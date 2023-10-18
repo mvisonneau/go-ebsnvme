@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [v0.2.1] - 2023-10-18
+
 ### Changed
 
 - Default installation location from `/usr/local/bin` to `/usr/local/sbin`
@@ -75,8 +77,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - README
 
 [Unreleased]: https://github.com/mvisonneau/go-ebsnvme/compare/0.1.3...HEAD
-[v0.2.0]: https://github.com/mvisonneau/go-ebsnvme/tree/0.1.3
-[v0.1.4]: https://github.com/mvisonneau/go-ebsnvme/tree/0.1.3
+[v0.2.1]: https://github.com/mvisonneau/go-ebsnvme/tree/v0.2.1
+[v0.2.0]: https://github.com/mvisonneau/go-ebsnvme/tree/v0.2.0
+[v0.1.4]: https://github.com/mvisonneau/go-ebsnvme/tree/v0.1.4
 [0.1.3]: https://github.com/mvisonneau/go-ebsnvme/tree/0.1.3
 [0.1.2]: https://github.com/mvisonneau/go-ebsnvme/tree/0.1.2
 [0.1.1]: https://github.com/mvisonneau/go-ebsnvme/tree/0.1.1
