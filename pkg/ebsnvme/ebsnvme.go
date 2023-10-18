@@ -14,13 +14,6 @@ const (
 	awsNvmeEbsMn              = "Amazon Elastic Block Store"
 )
 
-// Device represents a block device.
-type Device struct {
-	VolumeID string
-	Path     string
-	Name     string
-}
-
 type nvmeIdentifyController struct {
 	vid       uint16
 	ssvid     uint16
@@ -81,9 +74,9 @@ type nvmeAdminCommand struct {
 }
 
 // ScanDevice returns a Device object based on its path.
-func ScanDevice(device string) (d Device, err error) {
+func ScanDevice(devicePath string) (d Device, err error) {
 	var f uintptr
-	if f, err = open(device); err != nil {
+	if f, err = open(devicePath); err != nil {
 		return
 	}
 
@@ -109,9 +102,11 @@ func ScanDevice(device string) (d Device, err error) {
 		return
 	}
 
-	d.VolumeID = idCtrl.getVolumeID()
-	d.Path = idCtrl.getDevicePath()
-	d.Name = idCtrl.getDeviceName()
+	d = Device{
+		NVMEPath: devicePath,
+		VolumeID: idCtrl.getVolumeID(),
+		Name:     idCtrl.getDeviceName(),
+	}
 
 	return
 }
@@ -137,15 +132,6 @@ func (i *nvmeIdentifyController) getVolumeID() string {
 	s := strings.TrimSpace(string(i.sn[:]))
 	if s[3:4] != "-" {
 		return "vol-" + s[3:]
-	}
-
-	return s
-}
-
-func (i *nvmeIdentifyController) getDevicePath() string {
-	s := strings.TrimSpace(string(i.vs.bdev[:]))
-	if len(s) < 5 || s[:5] != "/dev/" {
-		return "/dev/" + s
 	}
 
 	return s

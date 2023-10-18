@@ -13,7 +13,6 @@
 ```bash
 ~$ go-ebsnvme /dev/nvme0n1
 sda1
-/dev/sda1
 vol-99cff4881d00c56a8
 
 ~$ go-ebsnvme -f volume-id /dev/nvme1n1
@@ -22,7 +21,7 @@ vol-80dfffbbee880a72c
 ~$ go-ebsnvme -f device-name /dev/nvme1n1
 xvdf
 
-~$ go-ebsnvme -t json -f device-path,volume-id  /dev/nvme1n1
+~$ go-ebsnvme -t json -f device-path,volume-id /dev/nvme1n1
 {"device-path":"/dev/xvdf","volume-id":"vol-80dfffbbee880a72c"}
 ```
 
@@ -87,7 +86,7 @@ func main() {
    }
    
    fmt.Println(device.Name)
-   fmt.Println(device.Path)
+   fmt.Println(device.Path())
    fmt.Println(device.VolumeID)
 }
 ```
@@ -107,7 +106,7 @@ COMMANDS:
 
 GLOBAL OPTIONS:
    --output-type value, -t value                                      print results in whether "text" or "json" (default: "text")
-   --output-field value, -f value [ --output-field value, -f value ]  filter out printed fields (default: "device-name", "device-path", "volume-id")
+   --output-field value, -f value [ --output-field value, -f value ]  filter out fields (device-name,device-namespace,device-partition,device-path,volume-id) (default: "device-name", "volume-id")
    --help, -h                                                         show help
 ```
 

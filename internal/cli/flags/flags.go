@@ -1,6 +1,9 @@
 package flags
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/urfave/cli/v2"
 
 	"github.com/mvisonneau/go-ebsnvme/internal/cli/output"
@@ -17,10 +20,9 @@ var (
 	OutputField = &cli.StringSliceFlag{
 		Name:    "output-field",
 		Aliases: []string{"f"},
-		Usage:   "filter out printed fields",
+		Usage:   fmt.Sprintf("filter out fields (%s)", strings.Join(output.GetValidFields().StringSlice(), ",")),
 		Value: cli.NewStringSlice(
 			output.FieldDeviceName.String(),
-			output.FieldDevicePath.String(),
 			output.FieldVolumeID.String(),
 		),
 	}

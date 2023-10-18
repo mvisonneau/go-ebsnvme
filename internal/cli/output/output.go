@@ -26,22 +26,28 @@ const (
 
 	// FieldDeviceName can be used to return local block device name.
 	FieldDeviceName Field = "device-name"
+	// FieldDeviceNamespace can be used to return the nvme namespace number of the device.
+	FieldDeviceNamespace Field = "device-namespace"
+	// FieldDevicePartition can be used to return the nvme partition number of the device.
+	FieldDevicePartition Field = "device-partition"
 	// FieldDevicePath can be used to return local block device path.
 	FieldDevicePath Field = "device-path"
 	// FieldVolumeID can be used to return EBS volume-id.
 	FieldVolumeID Field = "volume-id"
 )
 
-func getValidTypes() Types {
+func GetValidTypes() Types {
 	return Types{
 		TypeText,
 		TypeJSON,
 	}
 }
 
-func getValidFields() Fields {
+func GetValidFields() Fields {
 	return Fields{
 		FieldDeviceName,
+		FieldDeviceNamespace,
+		FieldDevicePartition,
 		FieldDevicePath,
 		FieldVolumeID,
 	}
@@ -55,8 +61,15 @@ func (f Field) String() string {
 	return string(f)
 }
 
+func (fields Fields) StringSlice() (slice []string) {
+	for _, f := range fields {
+		slice = append(slice, string(f))
+	}
+	return
+}
+
 func ParseTypeFromString(t string) (parsedType Type, err error) {
-	if !slices.Contains(getValidTypes(), Type(t)) {
+	if !slices.Contains(GetValidTypes(), Type(t)) {
 		err = fmt.Errorf("invalid type '%s'", t)
 		return
 	}
@@ -68,7 +81,7 @@ func ParseTypeFromString(t string) (parsedType Type, err error) {
 func ParseFieldsFromStringSlice(fields []string) (parsedFields Fields, err error) {
 	for _, field := range fields {
 		parsedField := Field(field)
-		if !slices.Contains(getValidFields(), parsedField) {
+		if !slices.Contains(GetValidFields(), parsedField) {
 			err = errors.Join(err, fmt.Errorf("invalid field '%s'", field))
 			continue
 		}
@@ -87,8 +100,12 @@ func FormatDeviceDetails(d ebsnvme.Device, outputType Type, outputFields []Field
 		switch field {
 		case FieldDeviceName:
 			value = d.Name
+		case FieldDeviceNamespace:
+			value = d.Namespace()
+		case FieldDevicePartition:
+			value = d.Partition()
 		case FieldDevicePath:
-			value = d.Path
+			value = d.Path()
 		case FieldVolumeID:
 			value = d.VolumeID
 		default:
